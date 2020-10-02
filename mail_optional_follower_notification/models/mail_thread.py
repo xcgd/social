@@ -10,6 +10,7 @@ class MailThread(models.AbstractModel):
     _inherit = "mail.thread"
 
     @api.multi
+    @api.returns("self", lambda value: value.id)
     def message_post(
         self,
         body="",
