@@ -12,6 +12,14 @@ class TestMailOptionalFollowernotifications(common.TransactionCase):
         self.demo_user = self.env.ref("base.user_demo")
         self.partner_03 = self.demo_user.copy().partner_id
 
+        # Remove messages that may conflict before we start.
+        self.env["mail.message"].search(
+            [
+                ("model", "=", "res.partner"),
+                ("res_id", "=", self.partner_01.id),
+            ]
+        ).unlink()
+
     def test_send_email_optional_follower_notifications(self):
         ctx = self.env.context.copy()
         ctx.update(
