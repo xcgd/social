@@ -68,8 +68,10 @@ class TestMailOptionalFollowernotifications(common.TransactionCase):
         )
         message = self.env["mail.message"]
         for record in res:
-            if record.notification_ids.mapped("res_partner_id").ids == [
-                self.partner_03.id
-            ] and self.partner_03.id in record.partner_ids.ids:
+            if (
+                record.notification_ids.mapped("res_partner_id").ids
+                == [self.partner_03.id]
+                and self.partner_03.id in record.partner_ids.ids
+            ):
                 message += record
         self.assertGreaterEqual(len(message.ids), 1)
