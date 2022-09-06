@@ -31,7 +31,7 @@ class TestMailTracking(TransactionCase):
             'email': 'sender@example.com',
         })
         self.recipient = self.env['res.partner'].create({
-            'name': 'Test recipient',
+            'name': 'Test Recipient',
             'email': 'recipient@example.com',
         })
         self.last_request = http.request
@@ -44,7 +44,11 @@ class TestMailTracking(TransactionCase):
             'httprequest': type('obj', (object,), {
                 'remote_addr': '123.123.123.123',
                 'user_agent': FakeUserAgent(),
+                'url': 'http://example',
+                'method': 'GET',
+                'environ': {},
             }),
+            'url': 'http://example',
         })
 
     def tearDown(self, *args, **kwargs):
@@ -338,7 +342,7 @@ class TestMailTracking(TransactionCase):
         orig_score = self.recipient.email_score
         orig_count = self.recipient.tracking_emails_count
         orig_email = self.recipient.email
-        self.recipient.email = orig_email + '2'
+        self.recipient.email = '2' + orig_email
         self.assertEqual(50.0, self.recipient.email_score)
         self.assertEqual(0, self.recipient.tracking_emails_count)
         self.recipient.email = orig_email
