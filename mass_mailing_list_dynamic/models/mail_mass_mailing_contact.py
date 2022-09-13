@@ -12,14 +12,17 @@ class MassMailingContact(models.Model):
 
     def _check_dynamic_full_sync_list(self, mailing_list):
         if (
-            mailing_list.dynamic and mailing_list.sync_method == "full"
+            mailing_list.dynamic
+            and mailing_list.sync_method == "full"
             and not self.env.context.get("bypass_dynamic_list_check")
         ):
-            raise ValidationError(_(
-                "Cannot edit manually contacts in a fully "
-                "synchronized list. Change its sync method or execute "
-                "a manual sync instead."
-            ))
+            raise ValidationError(
+                _(
+                    "Cannot edit manually contacts in a fully "
+                    "synchronized list. Change its sync method or execute "
+                    "a manual sync instead."
+                )
+            )
 
     def _check_no_modification_on_fully_synced_lists(self, vals):
         """Check that no modification is done on fully synced dynamic list.
@@ -47,10 +50,9 @@ class MassMailingContact(models.Model):
 
     def write(self, vals):
         self._check_no_modification_on_fully_synced_lists(vals)
-        return super().write(vals)
+        return super(MassMailingContact, self).write(vals)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            self._check_no_modification_on_fully_synced_lists(vals)
-        return super().create(vals_list)
+    @api.model
+    def create(self, vals):
+        self._check_no_modification_on_fully_synced_lists(vals)
+        return super(MassMailingContact, self).create(vals)
