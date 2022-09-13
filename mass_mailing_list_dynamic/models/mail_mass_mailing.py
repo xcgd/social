@@ -12,4 +12,4 @@ class MassMailing(models.Model):
            advance to avoid missing recipients due to domain change or new
            partners fitting into the conditions"""
         self.contact_list_ids.action_sync()
-        return super().get_remaining_recipients()
+        return super(MassMailing, self).get_remaining_recipients()
