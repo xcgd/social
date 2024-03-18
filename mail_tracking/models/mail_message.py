@@ -99,6 +99,20 @@ class MailMessage(models.Model):
             "soft-bounced": "error",
         }
 
+    def _notification_status(self, notification):
+        """Map mail.notification states to be used in chatter"""
+        return (
+            "opened"
+            if notification.is_read
+            else {
+                "ready": "waiting",
+                "sent": "delivered",
+                "bounce": "error",
+                "exception": "error",
+                "canceled": "error",
+            }.get(notification.notification_status, "unknown")
+        )
+
     def _partner_tracking_status_get(self, tracking_email):
         """Determine tracking status"""
         tracking_status_map = self._tracking_status_map_get()
@@ -199,6 +213,28 @@ class MailMessage(models.Model):
                     email_cc_list.discard(partner.email)
                     isCc = True
                 tracking_status = tracking_unknown_values.copy()
+                # Search internal mail.notifications (for users using it)
+                # Note that by default, read notifications older than 180 days are
+                # deleted.
+                notification = self.env["mail.notification"].search(
+                    [
+                        ("notification_type", "=", "inbox"),
+                        ("mail_message_id", "=", message.id),
+                        ("res_partner_id", "=", partner.id),
+                    ]
+                )
+                if notification:
+                    status = self._notification_status(notification)
+                    tracking_status.update(
+                        {
+                            "status": status,
+                            "status_human": self._partner_tracking_status_human_get(
+                                status
+                            ),
+                            "error_type": notification.failure_type,
+                            "error_description": notification.failure_reason,
+                        }
+                    )
                 tracking_status.update(
                     {
                         "recipient": partner.name,
