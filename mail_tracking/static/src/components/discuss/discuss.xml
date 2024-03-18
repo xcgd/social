@@ -49,7 +49,7 @@
             <i class="fa fa-low-vision" role="img" aria-label="Anonymous Recipient" />
         </span>
         <span t-elif="tracking['status'] === 'unknown'" class="mail_tracking_unknown">
-            <i class="fa fa-ban" role="img" aria-label="Unknown Status" />
+            <i class="fa fa-question" role="img" aria-label="Unknown Status" />
         </span>
         <span
             t-elif="tracking['status'] === 'waiting'"
