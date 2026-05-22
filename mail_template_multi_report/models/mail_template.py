@@ -17,7 +17,7 @@ class MailTemplate(models.Model):
         string="Other Reports",
     )
 
-    def _patch_email_values(self, values, res_id, report_line):
+    def _patch_report_email_values(self, values, res_id, report_line):
 
         condition = report_line.condition
 
@@ -70,12 +70,12 @@ class MailTemplate(models.Model):
             for report_line in self.report_line_ids:
                 for res_id, values in results.items():
                     results[res_id] = (
-                        self._patch_email_values(values, res_id, report_line)
+                        self._patch_report_email_values(values, res_id, report_line)
                     )
             return results
 
         for report_line in self.report_line_ids:
             results.update(
-                self._patch_email_values(results, res_ids[0], report_line)
+                self._patch_report_email_values(results, res_ids[0], report_line)
             )
         return results
