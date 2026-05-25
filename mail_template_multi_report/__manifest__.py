@@ -3,7 +3,7 @@
 
 {
     "name": "Mail Template Multi Report",
-    "version": "11.0.1.0.0",
+    "version": "11.0.1.0.1",
     "category": "Marketing",
     "summary": "Multiple Reports in Mail Templates",
     "author": "Savoir-faire Linux, Odoo Community Association (OCA)",
